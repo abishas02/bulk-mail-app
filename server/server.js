@@ -7,20 +7,24 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// ✅ CORS Fix
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+app.options('*', cors());
+
 app.use(express.json());
 
 // Routes
 const emailRoutes = require('./routes/emailRoutes');
 app.use('/api', emailRoutes);
 
-// Health check
 app.get('/', (req, res) => {
   res.json({ message: '🚀 Bulk Mail API is running!' });
 });
 
-// Connect to MongoDB & start server
 const PORT = process.env.PORT || 5000;
 
 mongoose
